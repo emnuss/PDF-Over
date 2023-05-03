@@ -354,7 +354,7 @@ public class ATrustParser {
     }
 
     public static class Result {
-        public final @CheckForNull String slResponse;
+        public @CheckForNull String slResponse;
         public final @CheckForNull HTMLResult html;
 
         private Result(@Nonnull String slResponse) { this.slResponse = slResponse; this.html = null; }

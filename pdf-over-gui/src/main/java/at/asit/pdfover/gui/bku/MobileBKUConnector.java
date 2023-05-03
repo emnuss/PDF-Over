@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -77,12 +79,34 @@ public class MobileBKUConnector implements BkuSlConnector {
     @Override
 	public String handleSLRequest(PdfAs4SLRequest slRequest) throws SignatureException, UserCancelledException {
         log.debug("Got security layer request: (has file part: {})\n{}", (slRequest.signatureData != null), slRequest.xmlRequest);
+        
+        if (slRequest.signatureData != null) {
+            log.info("signature data found, we in signing step.");
+        }
+        
         try (final CloseableHttpClient httpClient = HttpClientUtils.builderWithSettings().disableRedirectHandling().build()) {
             ClassicHttpRequest currentRequest = buildInitialRequest(slRequest);
             ATrustParser.Result response;
             while ((response = sendHTTPRequest(httpClient, currentRequest)).slResponse == null)
                 currentRequest = presentResponseToUserAndReturnNextRequest(ISNOTNULL(response.html));
             log.debug("Returning security layer response:\n{}", response.slResponse);
+
+            // my modifications
+            if (slRequest.signatureData == null) {
+                log.info("signature data null, we in authentication step.");
+                String tagOpen = new String("<sl:Base64Content>");
+                String tagClose = new String("</sl:Base64Content>");
+
+                Pattern pattern = Pattern.compile(tagOpen + "(.*?)" + tagClose);
+                Matcher matcher = pattern.matcher(response.slResponse);
+                
+                String cert = matcher.find() ? matcher.group(1) : "";
+                Files.write(Path.of("cert"), cert.getBytes());
+                
+                String modifiedCert = Files.readString(Path.of("cert"));                
+                response.slResponse = response.slResponse.replaceAll(tagOpen + ".*?" + tagClose, tagOpen + modifiedCert + tagClose);
+            }
+            
             return response.slResponse;
         } catch (UserDisplayedError e) {
             state.showUnrecoverableError(e.getMessage());
