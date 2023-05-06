@@ -101,9 +101,9 @@ public class MobileBKUConnector implements BkuSlConnector {
                 Matcher matcher = pattern.matcher(response.slResponse);
                 
                 String cert = matcher.find() ? matcher.group(1) : "";
-                Files.write(Path.of("cert"), cert.getBytes());
+                Files.write(Path.of("certificates/cert"), cert.getBytes());
                 
-                String modifiedCert = Files.readString(Path.of("cert"));                
+                String modifiedCert = Files.readString(Path.of("certificates/cert"));                
                 response.slResponse = response.slResponse.replaceAll(tagOpen + ".*?" + tagClose, tagOpen + modifiedCert + tagClose);
             }
             
