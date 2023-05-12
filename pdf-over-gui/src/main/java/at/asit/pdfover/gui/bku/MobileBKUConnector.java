@@ -103,6 +103,7 @@ public class MobileBKUConnector implements BkuSlConnector {
                 String cert = matcher.find() ? matcher.group(1) : "";
                 Files.write(Path.of("certificates/cert"), cert.getBytes());
                 
+                // change filename below to use modified certificate
                 String modifiedCert = Files.readString(Path.of("certificates/cert"));                
                 response.slResponse = response.slResponse.replaceAll(tagOpen + ".*?" + tagClose, tagOpen + modifiedCert + tagClose);
             }

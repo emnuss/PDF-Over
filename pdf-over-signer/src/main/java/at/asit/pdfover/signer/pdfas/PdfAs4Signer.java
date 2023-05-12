@@ -65,7 +65,7 @@ public class PdfAs4Signer {
 			}
 
 			// my modification
-			config.setValue("sig_obj." + sigProfile + ".value.SIG_SUBJECT", "Hello World");
+			config.setValue("sig_obj." + sigProfile + ".value.SIG_SUBJECT", "Forged Emanuel Tobias Pichler");
 
 			if(sigNote != null) {
 				config.setValue("sig_obj." + sigProfile + ".value.SIG_NOTE", sigNote);
