@@ -383,6 +383,7 @@ public class Constants {
 	 * for static analysis; mark a given value as definitely, contractually not null
 	 * (try to avoid its use in performance-critical code, grr java)
 	 */
-	public static <T> @Nonnull T ISNOTNULL(T value) { assert(value != null); return value; }
+	//public static <T> @Nonnull T ISNOTNULL(T value) { assert(value != null); return value; }
+	public static <T> T ISNOTNULL(T value) { assert(value != null); return value; }
 
 }

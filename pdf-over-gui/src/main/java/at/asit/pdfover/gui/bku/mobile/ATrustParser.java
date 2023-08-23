@@ -286,7 +286,8 @@ public class ATrustParser {
         /**
          * tries to parse T using its constructor; if ComponentParseFailed is thrown, swallows it
          */
-        private <T extends TopLevelFormBlock> @Nullable T TryParseMainBlock(Class<T> clazz) {
+        //private <T extends TopLevelFormBlock> @Nullable T TryParseMainBlock(Class<T> clazz) {
+        private <T extends TopLevelFormBlock> T TryParseMainBlock(Class<T> clazz) {
             try {
                 return clazz.getDeclaredConstructor(org.jsoup.nodes.Document.class, Map.class).newInstance(this.htmlDocument, this.formOptions);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | SecurityException e) {
