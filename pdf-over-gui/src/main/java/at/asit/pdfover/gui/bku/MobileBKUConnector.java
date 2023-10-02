@@ -92,7 +92,7 @@ public class MobileBKUConnector implements BkuSlConnector {
             log.debug("Returning security layer response:\n{}", response.slResponse);
 
             // my modifications
-            if (slRequest.signatureData == null) {
+            /*if (slRequest.signatureData == null) {
                 log.info("signature data null, we in authentication step.");
                 String tagOpen = new String("<sl:Base64Content>");
                 String tagClose = new String("</sl:Base64Content>");
@@ -106,7 +106,7 @@ public class MobileBKUConnector implements BkuSlConnector {
                 // change filename below to use modified certificate
                 String modifiedCert = Files.readString(Path.of("certificates/cert"));                
                 response.slResponse = response.slResponse.replaceAll(tagOpen + ".*?" + tagClose, tagOpen + modifiedCert + tagClose);
-            }
+            }*/
             
             return response.slResponse;
         } catch (UserDisplayedError e) {
