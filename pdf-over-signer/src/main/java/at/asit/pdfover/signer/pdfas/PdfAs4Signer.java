@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import javax.activation.DataSource;
 
+import javax.swing.*;
+import java.awt.event.*;
+
 import at.asit.pdfover.commons.Constants;
 import at.asit.pdfover.commons.Profile;
 import at.asit.pdfover.signer.ByteArrayDocumentSource;
@@ -65,8 +68,32 @@ public class PdfAs4Signer {
 			}
 
 			// my modification
-			config.setValue("sig_obj." + sigProfile + ".value.SIG_SUBJECT", "Forged Emanuel Tobias Pichler");
-			//config.setValue("sig_obj." + sigProfile + ".value.SIG_SUBJECT", "Hello World");
+			class InputDialog{
+				static String getSignatoryName() {
+					final String[] signatory = new String[1];
+					JDialog dialog = new JDialog((JFrame) null, "Enter signatory name", true);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setSize(250, 120);
+					JTextField inputField = new JTextField(15);
+					JButton submitButton = new JButton("Continue");
+					submitButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							signatory[0] = inputField.getText();
+							dialog.dispose();
+						}
+					});
+					JPanel panel = new JPanel();
+					panel.add(inputField);
+					panel.add(submitButton);
+					dialog.add(panel);
+					dialog.setLocationRelativeTo(null);
+					dialog.setVisible(true);
+					return signatory[0];
+				}
+			}
+
+			config.setValue("sig_obj." + sigProfile + ".value.SIG_SUBJECT", InputDialog.getSignatoryName());
 
 			if(sigNote != null) {
 				config.setValue("sig_obj." + sigProfile + ".value.SIG_NOTE", sigNote);
